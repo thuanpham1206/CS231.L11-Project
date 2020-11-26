@@ -1,6 +1,6 @@
 # CS231.L11 - COMPUTER VISION
 
-## Vietnam National University HCMC, University of Information and Technology (UIT-HCM)
+***Vietnam National University HCMC, University of Information and Technology (UIT-HCM)***
 
 **Class:** Computer Vision
 
