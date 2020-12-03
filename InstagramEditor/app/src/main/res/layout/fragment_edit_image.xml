@@ -1,71 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center_vertical"
-    android:paddingLeft="@dimen/margin_horizontal"
-    android:paddingRight="@dimen/margin_horizontal"
-    tools:context=".EditImageFragment">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/padding_10"
-        android:paddingTop="@dimen/padding_10">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/margin_horizontal"
+        android:paddingRight="@dimen/margin_horizontal"
+        tools:context=".EditImageFragment">
 
-
-        <TextView
-            android:layout_width="@dimen/lbl_edit_image_control"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/lbl_brightness" />
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
 
-        <SeekBar
-            android:id="@+id/seekbar_brightness"
-            android:layout_width="0dp"
+
+            <TextView
+                android:layout_width="@dimen/lbl_edit_image_control"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_brightness" />
+
+            <SeekBar
+                android:id="@+id/seekbar_brightness"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
+
+
+            <TextView
+                android:layout_width="@dimen/lbl_edit_image_control"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_contrast" />
+
+            <SeekBar
+                android:id="@+id/seekbar_contrast"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
+
+            <TextView
+                android:layout_width="@dimen/lbl_edit_image_control"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_saturation" />
+
+            <SeekBar
+                android:id="@+id/seekbar_saturation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
+
+
+            <TextView
+                android:layout_width="@dimen/lbl_edit_image_control"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_coloroverlay" />
+
+            <SeekBar
+                android:id="@+id/seekbar_coloroverlay"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
+
+
+            <TextView
+                android:layout_width="@dimen/lbl_edit_image_control"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_tonecurve" />
+
+            <SeekBar
+                android:id="@+id/seekbar_tonecurve"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="@dimen/padding_10"
+            android:paddingTop="@dimen/padding_10">
+
+
+            <TextView
+                android:layout_width="@dimen/lbl_edit_image_control"
+                android:layout_height="wrap_content"
+                android:text="@string/lbl_vignette" />
+
+            <SeekBar
+                android:id="@+id/seekbar_vignette"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/padding_10"
-        android:paddingTop="@dimen/padding_10">
-
-
-        <TextView
-            android:layout_width="@dimen/lbl_edit_image_control"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_contrast" />
-
-        <SeekBar
-            android:id="@+id/seekbar_contrast"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/padding_10"
-        android:paddingTop="@dimen/padding_10">
-
-        <TextView
-            android:layout_width="@dimen/lbl_edit_image_control"
-            android:layout_height="wrap_content"
-            android:text="@string/lbl_saturation" />
-
-        <SeekBar
-            android:id="@+id/seekbar_saturation"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -24,46 +25,6 @@ import java.io.OutputStream;
 
 public class BitmapUtils {
     private static final String TAG = BitmapUtils.class.getSimpleName();
-
-    /**
-     * Getting bitmap from Assets folder
-     *
-     * @return
-     */
-    public static Bitmap getBitmapFromAssets(Context context, String fileName, int width, int height) {
-        AssetManager assetManager = context.getAssets();
-
-        InputStream istr;
-        Bitmap bitmap;
-        try {
-            final BitmapFactory.Options options = new BitmapFactory.Options();
-            options.inJustDecodeBounds = true;
-
-            istr = assetManager.open(fileName);
-
-            // Calculate inSampleSize
-            options.inSampleSize = calculateInSampleSize(options, width, height);
-
-            // Decode bitmap with inSampleSize set
-            options.inJustDecodeBounds = false;
-
-            bitmap = BitmapFactory.decodeStream(istr, null, options);
-            return bitmap;
-        } catch (IOException e) {
-            Log.e(TAG, "Exception: " + e.getMessage());
-        }
-
-        return null;
-    }
-
-    public static Bitmap getBitmapFromDrawableRes (Context context, int drawableSource, int width, int height){
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inJustDecodeBounds = true;
-        // Calculate inSampleSize
-        options.inSampleSize = calculateInSampleSize(options, width, height);
-        Bitmap bitmap = BitmapFactory.decodeResource(Resources.getSystem(), drawableSource, options);
-        return bitmap;
-    }
 
     /**
      * Getting bitmap from Gallery

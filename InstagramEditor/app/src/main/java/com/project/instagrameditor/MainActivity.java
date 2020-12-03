@@ -21,14 +21,17 @@ import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
 
@@ -37,6 +40,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,9 +52,12 @@ public class MainActivity extends AppCompatActivity
 
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    public static final String IMAGE_NAME = "sana.jpg";
-
     public static final int SELECT_GALLERY_IMAGE = 101;
+
+    private static final int CAMERA_REQUEST = 100;
+
+    private Uri saveImageUri;
+    private String imagePath;
 
     @BindView(R.id.image_preview)
     ImageView imagePreview;
@@ -83,6 +90,9 @@ public class MainActivity extends AppCompatActivity
     // load native image filters library
     static {
         System.loadLibrary("NativeImageProcessor");
+    }
+
+    public MainActivity() {
     }
 
     @Override
@@ -221,11 +231,10 @@ public class MainActivity extends AppCompatActivity
 
     // load the default image from assets on app launch
     private void loadImage() {
-        imagePreview.setImageResource(R.drawable.sana);
-        originalImage = ((BitmapDrawable)imagePreview.getDrawable()).getBitmap();
-        //originalImage = BitmapUtils.getBitmapFromAssets(this, IMAGE_NAME, 300, 300);
+        originalImage = BitmapUtils.decodeSampledBitmapFromResource(this.getResources(), R.drawable.sana,300, 300);
         filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
         finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
+        imagePreview.setImageBitmap(originalImage);
     }
 
     @Override
@@ -248,27 +257,54 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
 
+        if (id == R.id.action_camera) {
+            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            return true;
+        }
+
+        if (id == R.id.action_share) {
+            shareImage();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == SELECT_GALLERY_IMAGE) {
-            Bitmap bitmap = BitmapUtils.getBitmapFromGallery(this, data.getData(), 800, 800);
+        if (resultCode == RESULT_OK) {
+            switch (requestCode){
+                case SELECT_GALLERY_IMAGE:
+                    Bitmap bitmap = BitmapUtils.getBitmapFromGallery(this, data.getData(), 800, 800);
 
-            // clear bitmap memory
-            originalImage.recycle();
-            finalImage.recycle();
-            finalImage.recycle();
+                    // clear bitmap memory
+                    originalImage.recycle();
+                    filteredImage.recycle();
+                    finalImage.recycle();
 
-            originalImage = bitmap.copy(Bitmap.Config.ARGB_8888, true);
-            filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
-            finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
-            imagePreview.setImageBitmap(originalImage);
-            bitmap.recycle();
+                    originalImage = bitmap.copy(Bitmap.Config.ARGB_8888, true);
+                    filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
+                    finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
+                    imagePreview.setImageBitmap(originalImage);
+                    bitmap.recycle();
+                    break;
 
+                case CAMERA_REQUEST:
+                    // clear bitmap memory
+                    originalImage.recycle();
+                    filteredImage.recycle();
+                    finalImage.recycle();
 
+                    Bundle extras = data.getExtras();
+                    Bitmap photo = (Bitmap) extras.get("data");
+
+                    originalImage = photo.copy(Bitmap.Config.ARGB_8888, true);
+                    filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
+                    finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
+                    imagePreview.setImageBitmap(photo);
+                    break;
+            }
         }
     }
 
@@ -302,7 +338,8 @@ public class MainActivity extends AppCompatActivity
                     @Override
                     public void onPermissionsChecked(MultiplePermissionsReport report) {
                         if (report.areAllPermissionsGranted()) {
-                            final String path = BitmapUtils.insertImage(getContentResolver(), finalImage, System.currentTimeMillis() + "_profile.jpg", null);
+                            final String path = BitmapUtils.insertImage(getContentResolver(), finalImage, System.currentTimeMillis() + "_InstaEdit.jpg", null);
+                            saveImageUri = Uri.fromFile(new File(path));
                             if (!TextUtils.isEmpty(path)) {
                                 Snackbar snackbar = Snackbar
                                         .make(coordinatorLayout, "Image saved to gallery!", Snackbar.LENGTH_LONG)
@@ -340,4 +377,17 @@ public class MainActivity extends AppCompatActivity
         intent.setDataAndType(Uri.parse(path), "image/*");
         startActivity(intent);
     }
+
+    private void shareImage() {
+        if (saveImageUri == null) {
+            Snackbar snackbar = Snackbar.make(coordinatorLayout, getString(R.string.msg_save_image_to_share), Snackbar.LENGTH_LONG);
+            snackbar.show();
+            return;
+        }
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_STREAM, saveImageUri);
+        startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)));
+    }
+
 }

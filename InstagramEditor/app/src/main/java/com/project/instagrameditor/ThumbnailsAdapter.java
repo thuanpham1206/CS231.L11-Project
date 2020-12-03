@@ -1,6 +1,11 @@
 package com.project.instagrameditor;
 
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,15 +15,18 @@ import android.widget.TextView;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.zomato.photofilters.FilterPack;
 import com.zomato.photofilters.imageprocessors.Filter;
 import com.zomato.photofilters.utils.ThumbnailItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.MyViewHolder> {
+
     private List<ThumbnailItem> thumbnailItemList;
     private ThumbnailsAdapterListener listener;
     private Context mContext;
@@ -59,13 +67,10 @@ public class ThumbnailsAdapter extends RecyclerView.Adapter<ThumbnailsAdapter.My
 
         holder.thumbnail.setImageBitmap(thumbnailItem.image);
 
-        holder.thumbnail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onFilterSelected(thumbnailItem.filter);
-                selectedIndex = position;
-                notifyDataSetChanged();
-            }
+        holder.thumbnail.setOnClickListener(view -> {
+            listener.onFilterSelected(thumbnailItem.filter);
+            selectedIndex = position;
+            notifyDataSetChanged();
         });
 
         holder.filterName.setText(thumbnailItem.filterName);

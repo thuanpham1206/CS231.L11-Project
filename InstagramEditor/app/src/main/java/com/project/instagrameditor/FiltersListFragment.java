@@ -1,11 +1,13 @@
 package com.project.instagrameditor;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,8 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class FiltersListFragment extends Fragment implements ThumbnailsAdapter.ThumbnailsAdapterListener{
-
+public class FiltersListFragment extends Fragment implements ThumbnailsAdapter.ThumbnailsAdapterListener {
     @BindView(R.id.recycler_view)
     RecyclerView recyclerView;
 
@@ -71,7 +72,9 @@ public class FiltersListFragment extends Fragment implements ThumbnailsAdapter.T
         recyclerView.addItemDecoration(new SpacesItemDecoration(space));
         recyclerView.setAdapter(mAdapter);
 
-        prepareThumbnail(null);
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), R.drawable.dog);
+
+        prepareThumbnail(icon);
 
         return view;
     }
@@ -82,13 +85,15 @@ public class FiltersListFragment extends Fragment implements ThumbnailsAdapter.T
      *
      * @param bitmap
      */
+
     public void prepareThumbnail(final Bitmap bitmap) {
         Runnable r = new Runnable() {
             public void run() {
                 Bitmap thumbImage;
 
                 if (bitmap == null) {
-                    thumbImage = BitmapUtils.getBitmapFromDrawableRes(getActivity(), R.drawable.dog, 100, 100);
+                    //thumbImage = BitmapUtils.getBitmapFromAssets(getActivity(), MainActivity.IMAGE_NAME, 100, 100);
+                    thumbImage = null;
                 } else {
                     thumbImage = Bitmap.createScaledBitmap(bitmap, 100, 100, false);
                 }
