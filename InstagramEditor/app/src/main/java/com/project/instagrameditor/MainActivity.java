@@ -18,8 +18,10 @@ import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.project.instagrameditor.utils.BitmapUtils;
 import com.zomato.photofilters.imageprocessors.Filter;
 import com.zomato.photofilters.imageprocessors.subfilters.BrightnessSubFilter;
+import com.zomato.photofilters.imageprocessors.subfilters.ColorOverlaySubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.ContrastSubFilter;
 import com.zomato.photofilters.imageprocessors.subfilters.SaturationSubfilter;
+import com.zomato.photofilters.imageprocessors.subfilters.VignetteSubfilter;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -86,6 +88,10 @@ public class MainActivity extends AppCompatActivity
     int brightnessFinal = 0;
     float saturationFinal = 1.0f;
     float contrastFinal = 1.0f;
+    float redFinal = 0.0f;
+    float blueFinal = 0.0f;
+    float greenFinal = 0.0f;
+    int vignetteFinal = 0;
 
     // load native image filters library
     static {
@@ -170,6 +176,24 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public void onColorOverlayChanged(final float red, final float blue, final float green) {
+        redFinal = red;
+        blueFinal = blue;
+        greenFinal = green;
+        Filter myFilter = new Filter();
+        myFilter.addSubFilter(new ColorOverlaySubFilter(100, red, blue, green));
+        imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
+    }
+
+    @Override
+    public void onVignetteChanged(final int vignette) {
+        vignetteFinal = vignette;
+        Filter myFilter = new Filter();
+        myFilter.addSubFilter(new VignetteSubfilter(this, vignette));
+        imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
+    }
+
+    @Override
     public void onEditStarted() {
 
     }
@@ -184,6 +208,8 @@ public class MainActivity extends AppCompatActivity
         myFilter.addSubFilter(new BrightnessSubFilter(brightnessFinal));
         myFilter.addSubFilter(new ContrastSubFilter(contrastFinal));
         myFilter.addSubFilter(new SaturationSubfilter(saturationFinal));
+        myFilter.addSubFilter(new VignetteSubfilter(this, vignetteFinal));
+        //myFilter.addSubFilter(new ColorOverlaySubFilter(100, redFinal, greenFinal, blueFinal));
         finalImage = myFilter.processFilter(bitmap);
     }
 
@@ -198,6 +224,10 @@ public class MainActivity extends AppCompatActivity
         brightnessFinal = 0;
         saturationFinal = 1.0f;
         contrastFinal = 1.0f;
+        vignetteFinal = 0;
+        redFinal = 0.0f;
+        blueFinal = 0.0f;
+        greenFinal = 0.0f;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -264,7 +294,6 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_share) {
-            shareImage();
             return true;
         }
         return super.onOptionsItemSelected(item);

@@ -1,24 +1,27 @@
 <resources>
     <string name="app_name">Instagram Editor</string>
-    <string name="activity_title_main">Instagram Editor</string>
+    <string name="activity_title_main">Editor</string>
     <string name="filters">FILTERS</string>
     <string name="edit">EDIT</string>
 
     <string name="lbl_brightness">BRIGHTNESS</string>
     <string name="lbl_contrast">CONTRAST</string>
     <string name="lbl_saturation">SATURATION</string>
-    <string name="lbl_coloroverlay">COLOR</string>
-    <string name="lbl_tonecurve">TONE CURVE</string>
     <string name="lbl_vignette">VIGNETTE</string>
+    <string name="lbl_depth">DEPTH</string>
+    <string name="lbl_red">RED</string>
+    <string name="lbl_green">GREEN</string>
+    <string name="lbl_blue">BLUE</string>
+
     <string name="tab_filters">FILTERS</string>
     <string name="tab_edit">EDIT</string>
 
 
     <string name="roboto_medium">sans-serif-medium</string>
     <string name="filter_normal">Normal</string>
-    <string name="action_save">Save as new image</string>
-    <string name="action_open">Open from gallery</string>
-    <string name="action_camera">Camera</string>
+    <string name="action_save">SAVE</string>
+    <string name="action_open">OPEN</string>
+    <string name="action_camera">CAMERA</string>
     <string name="action_share">Share...</string>
     <string name="action_settings">SETTINGS</string>
 

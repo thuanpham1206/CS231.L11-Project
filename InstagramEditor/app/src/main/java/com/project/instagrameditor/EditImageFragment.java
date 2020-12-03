@@ -25,6 +25,20 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
     @BindView(R.id.seekbar_saturation)
     SeekBar seekBarSaturation;
 
+    /*
+    @BindView(R.id.seekbar_red)
+    SeekBar seekBarRed;
+
+    @BindView(R.id.seekbar_blue)
+    SeekBar seekBarBlue;
+
+    @BindView(R.id.seekbar_green)
+    SeekBar seekBarGreen;
+    */
+
+    @BindView(R.id.seekbar_vignette)
+    SeekBar seekBarVignette;
+
     public void setListener(EditImageFragmentListener listener) {
         this.listener = listener;
     }
@@ -57,9 +71,33 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         seekBarSaturation.setMax(30);
         seekBarSaturation.setProgress(10);
 
+        // keeping brightness value b/w 0 - 255
+        seekBarBrightness.setMax(255);
+        seekBarBrightness.setProgress(0);
+
+        /*
+        // keeping red value b/w 0.0 - 1.0
+        seekBarRed.setMax(10);
+        seekBarRed.setProgress(0);
+
+        // keeping blue value b/w 0.0 - 1.0
+        seekBarBlue.setMax(10);
+        seekBarBlue.setProgress(0);
+
+        // keeping green value b/w 0.0 - 1.0
+        seekBarGreen.setMax(10);
+        seekBarGreen.setProgress(0);
+         */
+
         seekBarBrightness.setOnSeekBarChangeListener(this);
         seekBarContrast.setOnSeekBarChangeListener(this);
         seekBarSaturation.setOnSeekBarChangeListener(this);
+        seekBarVignette.setOnSeekBarChangeListener(this);
+        /*
+        seekBarRed.setOnSeekBarChangeListener(this);
+        seekBarBlue.setOnSeekBarChangeListener(this);
+        seekBarGreen.setOnSeekBarChangeListener(this);
+         */
 
         return view;
     }
@@ -88,6 +126,41 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
                 float floatVal = .10f * progress;
                 listener.onSaturationChanged(floatVal);
             }
+
+            if (seekBar.getId() == R.id.seekbar_vignette) {
+                int alpha = progress;
+                listener.onVignetteChanged(alpha);
+            }
+
+            /*
+            float floatVal = .10f;
+            float floatRed, floatBlue, floatGreen;
+            if (seekBar.getId() == R.id.seekbar_red) {
+                // converting int value to float
+                // red values are b/w 0.0f - 1.0f
+                floatRed = floatVal * progress;
+                floatBlue = seekBarBlue.getProgress();
+                floatGreen = seekBarGreen.getProgress();
+                listener.onColorOverlayChanged(floatRed, floatBlue, floatGreen);
+            }
+            if (seekBar.getId() == R.id.seekbar_blue) {
+                // converting int value to float
+                // blue values are b/w 0.0f - 1.0f
+                floatRed = seekBarRed.getProgress();
+                floatBlue = floatVal * progress;
+                floatGreen = seekBarGreen.getProgress();
+                listener.onColorOverlayChanged(floatRed, floatBlue, floatGreen);
+            }
+            if (seekBar.getId() == R.id.seekbar_green) {
+                // converting int value to float
+                // green values are b/w 0.0f - 1.0f
+                floatRed = seekBarRed.getProgress();
+                floatBlue = seekBarBlue.getProgress();
+                floatGreen = floatVal * progress;
+                listener.onColorOverlayChanged(floatRed, floatBlue, floatGreen);
+            }
+
+             */
         }
     }
 
@@ -115,6 +188,10 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         void onSaturationChanged(float saturation);
 
         void onContrastChanged(float contrast);
+
+        void onColorOverlayChanged(float red, float blue, float green);
+
+        void onVignetteChanged(int alpha);
 
         void onEditStarted();
 
