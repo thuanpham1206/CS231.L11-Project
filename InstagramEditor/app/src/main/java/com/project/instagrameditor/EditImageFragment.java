@@ -72,8 +72,8 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         seekBarSaturation.setProgress(10);
 
         // keeping brightness value b/w 0 - 255
-        seekBarBrightness.setMax(255);
-        seekBarBrightness.setProgress(0);
+        seekBarVignette.setMax(255);
+        seekBarVignette.setProgress(0);
 
         /*
         // keeping red value b/w 0.0 - 1.0
@@ -180,6 +180,7 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         seekBarBrightness.setProgress(100);
         seekBarContrast.setProgress(0);
         seekBarSaturation.setProgress(10);
+        seekBarVignette.setProgress(0);
     }
 
     public interface EditImageFragmentListener {
