@@ -6,7 +6,7 @@
 
 **Class ID:** CS231.L11
 
-**Project:** Beauty Camera
+**Project:** Instagram Editor
 
 **Lecturer:** MSc. Vinh-Tiep NGUYEN (UIT) - Nguyễn Vinh Tiệp
 
