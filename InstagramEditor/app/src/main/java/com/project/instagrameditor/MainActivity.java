@@ -210,42 +210,26 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSharpenChanged(final float sharpen){
         sharpenFinal = sharpen;
-        Utils.bitmapToMat(finalImage, before);
-        Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
-        Mat kernel = new Mat(3, 3, CvType.CV_32F){
-            {
-                put(0, 0, -1.0f, -1.0f, -1.0f);
-                put(1, 0, -1.0f, 9.0f + sharpen, -1.0f);
-                put(2, 0, -1.0f, -1.0f, -1.0f);
-            }
-        };
-        Imgproc.filter2D(before, after, -1, kernel);
-        Bitmap bmp = Bitmap.createBitmap(after.cols(), after.rows(), Bitmap.Config.ARGB_8888);
-        Utils.matToBitmap(after, bmp);
-        //imagePreview.setImageBitmap(bmp);
     }
 
     @Override
     public void onSmoothChanged(final int ksize){
         if (ksize%2 == 1){
             ksizeFinal = ksize;
-            Utils.bitmapToMat(finalImage, before);
-            Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
-            Imgproc.GaussianBlur(before, after, new Size(ksize,ksize), 0);
-            Bitmap bmp = Bitmap.createBitmap(after.cols(), after.rows(), Bitmap.Config.ARGB_8888);
-            Utils.matToBitmap(after, bmp);
-            //imagePreview.setImageBitmap(bmp);
         }
     }
 
     public Bitmap SharpenSubFilter(Bitmap bitmap, float sharpen){
+        if(sharpen <= 0.10f){
+            return bitmap;
+        }
         Utils.bitmapToMat(bitmap, before);
         Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
         Mat kernel = new Mat(3, 3, CvType.CV_32F){
             {
-                put(0, 0, -1.0f, -1.0f, -1.0f);
-                put(1, 0, -1.0f, 9.0f + sharpen, -1.0f);
-                put(2, 0, -1.0f, -1.0f, -1.0f);
+                put(0, 0, 0.0f, -1.0f, 0.0f);
+                put(1, 0, -1.0f, 4.8f + sharpen, -1.0f);
+                put(2, 0, 0.0f, -1.0f, 0.0f);
             }
         };
         Imgproc.filter2D(before, after, -1, kernel);
@@ -255,8 +239,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public Bitmap SmoothSubFilter(Bitmap bitmap, int ksize){
-        if (ksize%2 == 1){
-            ksizeFinal = ksize;
+        if (ksize > 2){
             Utils.bitmapToMat(bitmap, before);
             Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
             Imgproc.GaussianBlur(before, after, new Size(ksize,ksize), 0);
@@ -308,6 +291,7 @@ public class MainActivity extends AppCompatActivity
         blueFinal = 0.0f;
         greenFinal = 0.0f;
         sharpenFinal = 0.0f;
+        ksizeFinal = 0;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
