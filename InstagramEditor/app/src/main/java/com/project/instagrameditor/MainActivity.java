@@ -42,7 +42,15 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import org.opencv.android.BaseLoaderCallback;
+import org.opencv.android.LoaderCallbackInterface;
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.CvType;
+import org.opencv.core.Mat;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,8 +85,7 @@ public class MainActivity extends AppCompatActivity
     // to backup image with filter applied
     Bitmap filteredImage;
 
-    // the final image after applying
-    // brightness, saturation, contrast
+    // the final image after applying filters
     Bitmap finalImage;
 
     FiltersListFragment filtersListFragment;
@@ -92,6 +99,10 @@ public class MainActivity extends AppCompatActivity
     float blueFinal = 0.0f;
     float greenFinal = 0.0f;
     int vignetteFinal = 0;
+    float sharpenFinal = 0.0f;
+
+    // for sharpening and smoothing
+    Mat before, after;
 
     // load native image filters library
     static {
@@ -193,6 +204,21 @@ public class MainActivity extends AppCompatActivity
         imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
+    public void onSharpenChanged(final float sharpen){
+        sharpenFinal = sharpen;
+        Utils.bitmapToMat(finalImage, before);
+        Mat after = new Mat();
+        Mat kernel = new Mat(3, 3, CvType.CV_32F){
+            {
+                put(0, 0, -1.0f, -1.0f, -1.0f);
+                put(1, 0, -1.0f, 9.0f + sharpen, -1.0f);
+                put(2, 0, -1.0f, -1.0f, -1.0f);
+            }
+        };
+
+
+    }
+
     @Override
     public void onEditStarted() {
 
@@ -228,6 +254,7 @@ public class MainActivity extends AppCompatActivity
         redFinal = 0.0f;
         blueFinal = 0.0f;
         greenFinal = 0.0f;
+        sharpenFinal = 0.0f;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -417,6 +444,32 @@ public class MainActivity extends AppCompatActivity
         intent.setType("image/*");
         intent.putExtra(Intent.EXTRA_STREAM, saveImageUri);
         startActivity(Intent.createChooser(intent, getString(R.string.msg_share_image)));
+    }
+
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                {
+                    before = new Mat();
+                } break;
+                default:
+                {
+                    super.onManagerConnected(status);
+                } break;
+            }
+        }
+    };
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (!OpenCVLoader.initDebug()) {
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_0_0, this, mLoaderCallback);
+        } else {
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
     }
 
 }
