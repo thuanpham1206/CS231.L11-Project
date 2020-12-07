@@ -1,8 +1,10 @@
 package com.project.instagrameditor;
 
 import android.Manifest;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -69,7 +71,9 @@ public class MainActivity extends AppCompatActivity
     private static final int CAMERA_REQUEST = 100;
 
     private Uri saveImageUri;
+    private Uri imageUri;
     private String imagePath;
+    private String imageurl;
 
     @BindView(R.id.image_preview)
     ImageView imagePreview;
@@ -352,8 +356,13 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_camera) {
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            ContentValues values = new ContentValues();
+            values.put(MediaStore.Images.Media.TITLE, "New Picture");
+            values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+            imageUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+            startActivityForResult(intent, CAMERA_REQUEST);
             return true;
         }
 
@@ -384,18 +393,26 @@ public class MainActivity extends AppCompatActivity
                     break;
 
                 case CAMERA_REQUEST:
-                    // clear bitmap memory
-                    originalImage.recycle();
-                    filteredImage.recycle();
-                    finalImage.recycle();
+                    try {
+                        // clear bitmap memory
+                        originalImage.recycle();
+                        filteredImage.recycle();
+                        finalImage.recycle();
 
-                    Bundle extras = data.getExtras();
-                    Bitmap photo = (Bitmap) extras.get("data");
+                        //Bundle extras = data.getExtras();
+                        //Bitmap photo = (Bitmap) extras.get("data");
 
-                    originalImage = photo.copy(Bitmap.Config.ARGB_8888, true);
-                    filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
-                    finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
-                    imagePreview.setImageBitmap(photo);
+                        Bitmap bmp = BitmapUtils.getBitmapFromGallery(this, imageUri, 800, 800);
+                        Bitmap photo = rotateImage(bmp, 90);
+
+                        originalImage = photo.copy(Bitmap.Config.ARGB_8888, true);
+                        filteredImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
+                        finalImage = originalImage.copy(Bitmap.Config.ARGB_8888, true);
+                        imagePreview.setImageBitmap(photo);
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
             }
         }
@@ -507,6 +524,13 @@ public class MainActivity extends AppCompatActivity
         } else {
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
+    }
+
+    public static Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
 }
