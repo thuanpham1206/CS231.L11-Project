@@ -3,6 +3,7 @@ package com.project.instagrameditor;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Camera;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,6 +40,7 @@ import android.view.View;
 
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -288,8 +290,18 @@ public class MainActivity extends AppCompatActivity
         }
 
         if (id == R.id.action_camera) {
-            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            try {
+                Intent cameraIntent = new Intent(this, CustomCamera.class);
+                startActivity(cameraIntent);
+                //Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                //startActivityForResult(cameraIntent, CAMERA_REQUEST);
+            }
+            catch (Exception e)
+            {
+                System.out.println("Error " + e.getMessage());
+                return false;
+            }
+
             return true;
         }
 
