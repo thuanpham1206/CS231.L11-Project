@@ -48,6 +48,8 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
 
 import java.io.File;
 import java.io.IOException;
@@ -100,6 +102,7 @@ public class MainActivity extends AppCompatActivity
     float greenFinal = 0.0f;
     int vignetteFinal = 0;
     float sharpenFinal = 0.0f;
+    int ksizeFinal = 0;
 
     // for sharpening and smoothing
     Mat before, after;
@@ -167,7 +170,7 @@ public class MainActivity extends AppCompatActivity
         brightnessFinal = brightness;
         Filter myFilter = new Filter();
         myFilter.addSubFilter(new BrightnessSubFilter(brightness));
-        imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
+        //imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
     @Override
@@ -175,7 +178,7 @@ public class MainActivity extends AppCompatActivity
         saturationFinal = saturation;
         Filter myFilter = new Filter();
         myFilter.addSubFilter(new SaturationSubfilter(saturation));
-        imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
+        //imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
     @Override
@@ -183,7 +186,7 @@ public class MainActivity extends AppCompatActivity
         contrastFinal = contrast;
         Filter myFilter = new Filter();
         myFilter.addSubFilter(new ContrastSubFilter(contrast));
-        imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
+        //imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
     @Override
@@ -193,7 +196,7 @@ public class MainActivity extends AppCompatActivity
         greenFinal = green;
         Filter myFilter = new Filter();
         myFilter.addSubFilter(new ColorOverlaySubFilter(100, red, blue, green));
-        imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
+        //imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
     @Override
@@ -201,13 +204,14 @@ public class MainActivity extends AppCompatActivity
         vignetteFinal = vignette;
         Filter myFilter = new Filter();
         myFilter.addSubFilter(new VignetteSubfilter(this, vignette));
-        imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
+        //imagePreview.setImageBitmap(myFilter.processFilter(finalImage.copy(Bitmap.Config.ARGB_8888, true)));
     }
 
+    @Override
     public void onSharpenChanged(final float sharpen){
         sharpenFinal = sharpen;
         Utils.bitmapToMat(finalImage, before);
-        Mat after = new Mat();
+        Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
         Mat kernel = new Mat(3, 3, CvType.CV_32F){
             {
                 put(0, 0, -1.0f, -1.0f, -1.0f);
@@ -215,8 +219,54 @@ public class MainActivity extends AppCompatActivity
                 put(2, 0, -1.0f, -1.0f, -1.0f);
             }
         };
+        Imgproc.filter2D(before, after, -1, kernel);
+        Bitmap bmp = Bitmap.createBitmap(after.cols(), after.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(after, bmp);
+        //imagePreview.setImageBitmap(bmp);
+    }
 
+    @Override
+    public void onSmoothChanged(final int ksize){
+        if (ksize%2 == 1){
+            ksizeFinal = ksize;
+            Utils.bitmapToMat(finalImage, before);
+            Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
+            Imgproc.GaussianBlur(before, after, new Size(ksize,ksize), 0);
+            Bitmap bmp = Bitmap.createBitmap(after.cols(), after.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(after, bmp);
+            //imagePreview.setImageBitmap(bmp);
+        }
+    }
 
+    public Bitmap SharpenSubFilter(Bitmap bitmap, float sharpen){
+        Utils.bitmapToMat(bitmap, before);
+        Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
+        Mat kernel = new Mat(3, 3, CvType.CV_32F){
+            {
+                put(0, 0, -1.0f, -1.0f, -1.0f);
+                put(1, 0, -1.0f, 9.0f + sharpen, -1.0f);
+                put(2, 0, -1.0f, -1.0f, -1.0f);
+            }
+        };
+        Imgproc.filter2D(before, after, -1, kernel);
+        Bitmap bmp = Bitmap.createBitmap(after.cols(), after.rows(), Bitmap.Config.ARGB_8888);
+        Utils.matToBitmap(after, bmp);
+        return bmp;
+    }
+
+    public Bitmap SmoothSubFilter(Bitmap bitmap, int ksize){
+        if (ksize%2 == 1){
+            ksizeFinal = ksize;
+            Utils.bitmapToMat(bitmap, before);
+            Mat after = new Mat(before.rows(), before.cols(), CvType.CV_8UC1);
+            Imgproc.GaussianBlur(before, after, new Size(ksize,ksize), 0);
+            Bitmap bmp = Bitmap.createBitmap(after.cols(), after.rows(), Bitmap.Config.ARGB_8888);
+            Utils.matToBitmap(after, bmp);
+            return bmp;
+        }
+        else {
+            return bitmap;
+        }
     }
 
     @Override
@@ -237,6 +287,9 @@ public class MainActivity extends AppCompatActivity
         myFilter.addSubFilter(new VignetteSubfilter(this, vignetteFinal));
         //myFilter.addSubFilter(new ColorOverlaySubFilter(100, redFinal, greenFinal, blueFinal));
         finalImage = myFilter.processFilter(bitmap);
+        finalImage = SharpenSubFilter(finalImage, sharpenFinal);
+        finalImage = SmoothSubFilter(finalImage, ksizeFinal);
+        imagePreview.setImageBitmap(finalImage);
     }
 
     /**

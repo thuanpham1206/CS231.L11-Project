@@ -13,6 +13,9 @@
     <string name="lbl_green">GREEN</string>
     <string name="lbl_blue">BLUE</string>
 
+    <string name="lbl_sharpen">SHARPEN</string>
+    <string name="lbl_smooth">SMOOTH</string>
+
     <string name="tab_filters">FILTERS</string>
     <string name="tab_edit">EDIT</string>
 

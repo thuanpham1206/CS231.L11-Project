@@ -36,6 +36,12 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
     SeekBar seekBarGreen;
     */
 
+    @BindView(R.id.seekbar_sharpen)
+    SeekBar seekBarSharpen;
+
+    @BindView(R.id.seekbar_smooth)
+    SeekBar seekBarSmooth;
+
     @BindView(R.id.seekbar_vignette)
     SeekBar seekBarVignette;
 
@@ -89,10 +95,18 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         seekBarGreen.setProgress(0);
          */
 
+        seekBarSharpen.setMax(40);
+        seekBarSharpen.setProgress(0);
+
+        seekBarSmooth.setMax(20);
+        seekBarSmooth.setProgress(0);
+
         seekBarBrightness.setOnSeekBarChangeListener(this);
         seekBarContrast.setOnSeekBarChangeListener(this);
         seekBarSaturation.setOnSeekBarChangeListener(this);
         seekBarVignette.setOnSeekBarChangeListener(this);
+        seekBarSharpen.setOnSeekBarChangeListener(this);
+        seekBarSmooth.setOnSeekBarChangeListener(this);
         /*
         seekBarRed.setOnSeekBarChangeListener(this);
         seekBarBlue.setOnSeekBarChangeListener(this);
@@ -130,6 +144,16 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
             if (seekBar.getId() == R.id.seekbar_vignette) {
                 int alpha = progress;
                 listener.onVignetteChanged(alpha);
+            }
+
+            if(seekBar.getId() == R.id.seekbar_sharpen){
+                float value = progress * .010f;
+                listener.onSharpenChanged(value);
+            }
+
+            if(seekBar.getId() == R.id.seekbar_smooth){
+                int ksize = progress + 1;
+                listener.onSmoothChanged(ksize);
             }
 
             /*
@@ -181,6 +205,8 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         seekBarContrast.setProgress(0);
         seekBarSaturation.setProgress(10);
         seekBarVignette.setProgress(0);
+        seekBarSharpen.setProgress(0);
+        seekBarSmooth.setProgress(0);
     }
 
     public interface EditImageFragmentListener {
@@ -193,6 +219,10 @@ public class EditImageFragment extends Fragment implements SeekBar.OnSeekBarChan
         void onColorOverlayChanged(float red, float blue, float green);
 
         void onVignetteChanged(int alpha);
+
+        void onSharpenChanged(float value);
+
+        void onSmoothChanged(int ksize);
 
         void onEditStarted();
 
