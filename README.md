@@ -11,7 +11,8 @@
 **Lecturer:** MSc. Vinh-Tiep NGUYEN - Nguyễn Vinh Tiệp
 
 **Members:**
-|Student's ID|Fullname
+
+|Student's ID|Fullname|
 |--|--|--|
 |16521206|Phạm Ngọc Phúc Thuần
 |16521540|Lê Ngọc Tuyết Trinh
