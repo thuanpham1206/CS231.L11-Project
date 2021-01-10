@@ -20,7 +20,7 @@
 ---
 ## How to download and install the offical application:
 
-1. Click [here](https://github.com/thuanpham1206/CS231.L11-Project/blob/main/InstagramEditor/offical%20apk/InstagramEditor.apk) to download the apk.
+1. Click [here](https://github.com/thuanpham1206/CS231.L11-Project/blob/main/InstagramEditor/offical%20apk) to download the apk.
 2. 
 
 
