@@ -8,10 +8,28 @@
 
 **Project:** Instagram Editor
 
-**Lecturer:** MSc. Vinh-Tiep NGUYEN (UIT) - Nguyễn Vinh Tiệp
+**Lecturer:** MSc. Vinh-Tiep NGUYEN - Nguyễn Vinh Tiệp
 
 **Members:**
-|Student's ID|Fullname|Github name|
+|Student's ID|Fullname
 |--|--|--|
-|16521206|Phạm Ngọc Phúc Thuần|thuanpham1206|
-|16521540|Lê Ngọc Tuyết Trinh|touken2411|
+|16521206|Phạm Ngọc Phúc Thuần
+|16521540|Lê Ngọc Tuyết Trinh
+
+---
+## Offical apk:
+
+
+
+## Tutorial of repository:
+
+- Install:
+  + Android Studio:
+
+    https://developer.android.com/studio?gclid=Cj0KCQiA6Or_BRC_ARIsAPzuer9JwXQX5P4ElhW_GObRQrRWMdK3OmIo5B3kqv9hiONQ9dMOWaPrKpEaAmvaEALw_wcB&gclsrc=aw.ds
+
+  + OpenCV for Android Studio:
+
+    https://github.com/opencv/opencv/archive/4.5.0.zip
+
+- Steps to  
