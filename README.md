@@ -21,7 +21,7 @@
 ## How to download and install the offical application:
 
 1. Click [here](https://github.com/thuanpham1206/CS231.L11-Project/blob/main/InstagramEditor/offical%20apk) to download the apk.
-2. 
+2. Install the ***Instagram Editor***.
 
 
 ## Tutorial of repository:
@@ -29,4 +29,3 @@
 - Download and install [Android Studio](https://developer.android.com/studio?gclid=Cj0KCQiA6Or_BRC_ARIsAPzuer9JwXQX5P4ElhW_GObRQrRWMdK3OmIo5B3kqv9hiONQ9dMOWaPrKpEaAmvaEALw_wcB&gclsrc=aw.ds).
 - Download [opencv-4.5.0-android-sdk.zip](https://github.com/opencv/opencv/archive/4.5.0.zip) and extract to C Disk.
 - Clone this repository.
-- 
